@@ -1,0 +1,29 @@
+name: CI
+
+on: [push]
+
+jobs:
+  ci_on_push:
+    # FYI: https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#concurrency
+    concurrency:
+      group: ${{ github.ref }}
+      cancel-in-progress: true
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.OS }}-node-modules-v2-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: ${{ runner.OS }}-node-modules-v2
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Lint
+        run: npm run lint

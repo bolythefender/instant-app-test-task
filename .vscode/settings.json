@@ -1,0 +1,7 @@
+{
+    "eslint.workingDirectories": ["src"],
+    "git.ignoreLimitWarning": true,
+    "editor.codeActionsOnSave": [
+    "source.fixAll"
+    ]
+}
